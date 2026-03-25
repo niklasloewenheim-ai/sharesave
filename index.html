@@ -1,13 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ShareSave - Split Costs, Save Money</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Löwenheim Laboratory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #000;
+            background: #fff;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 100;
+            transition: box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .logo strong {
+            font-size: 22px;
+            font-weight: 400;
+            margin-right: 8px;
+            color: #1a5490;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 48px;
+        }
+
+        nav a {
+            color: #000;
+            text-decoration: none;
+            font-size: 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1a5490;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #1a5490;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 180px 48px 120px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 140px;
+            right: 48px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(26, 84, 144, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .hero-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            color: #1a5490;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 68px;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #000 0%, #1a5490 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #444;
+            max-width: 800px;
+            margin-bottom: 80px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 100px;
+        }
+
+        .stat {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .stat::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(180deg, #1a5490 0%, #00a3a1 100%);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 8px;
+            color: #1a5490;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+        }
+
+        .wave-section {
+            width: 100%;
+            height: 180px;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(26, 84, 144, 0.02) 100%);
+        }
+
+        section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 48px;
+            position: relative;
+        }
+
+        .gray-bg {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f8fa 100%);
+        }
+
+        h2 {
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 48px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #1a5490 0%, #00a3a1 100%);
+        }
+
+        section p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 24px;
+            max-width: 900px;
+        }
+
+        .pi-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%);
+            padding: 60px;
+            border-radius: 16px;
+            max-width: 900px;
+            border-left: 4px solid #1a5490;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .pi-name {
+            font-size: 42px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #1a5490;
+        }
+
+        .pi-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00a3a1;
+            margin-bottom: 32px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #1a5490 0%, #00a3a1 100%);
+            margin: 32px 0;
+        }
+
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .research-item {
+            background: #fff;
+            padding: 36px;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .research-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(180deg, #1a5490 0%, #00a3a1 100%);
+            transition: height 0.3s ease;
+        }
+
+        .research-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(26, 84, 144, 0.12);
+            border-color: #1a5490;
+        }
+
+        .research-item:hover::before {
+            height: 100%;
+        }
+
+        .research-item h3 {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #1a5490;
+        }
+
+        .research-item p {
+            font-size: 16px;
+            color: #555;
+            margin: 0;
+        }
+
+        .pub-item {
+            padding: 40px 0;
+            border-bottom: 1px solid #e5e5e5;
+            max-width: 1000px;
+            transition: padding-left 0.3s ease;
+        }
+
+        .pub-item:hover {
+            padding-left: 20px;
+            border-bottom-color: #1a5490;
+        }
+
+        .pub-meta {
+            font-size: 13px;
+            margin-bottom: 16px;
+            color: #1a5490;
+            font-weight: 500;
+        }
+
+        .pub-item h3 {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .pub-item:hover h3 {
+            color: #1a5490;
+        }
+
+        .pub-authors {
+            font-size: 15px;
+            color: #666;
+        }
+
+        #contact {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f8fa 100%);
+            border-radius: 16px;
+            padding: 80px 48px;
+        }
+
+        #contact a {
+            color: #1a5490;
+            text-decoration: none;
+            border-bottom: 2px solid #1a5490;
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
+        }
+
+        #contact a:hover {
+            color: #00a3a1;
+            border-bottom-color: #00a3a1;
+        }
+
+        footer {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 64px 48px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 48px;
+        }
+
+        footer h4 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #1a5490;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+
+        footer li {
+            margin-bottom: 8px;
+        }
+
+        footer a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #1a5490;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+            padding-top: 32px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 32px;
+            }
+            .research-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo"><strong>L</strong>Löwenheim Laboratory</div>
+            <ul>
+                <li><a href="#research">Research</a></li>
+                <li><a href="#publications">Publications</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-label">Auditory Neuroscience Research</div>
+        <h1>Restoring the Symphony<br>of Human Hearing</h1>
+        <p class="hero-subtitle">Pioneering biological pathways to regenerate sensory hair cells and restore auditory function in patients with hearing loss</p>
+        <div class="stats">
+            <div><div class="stat-number">25+</div><div class="stat-label">Years Research</div></div>
+            <div><div class="stat-number">100+</div><div class="stat-label">Publications</div></div>
+            <div><div class="stat-number">15+</div><div class="stat-label">Collaborators</div></div>
+        </div>
+    </div>
+
+    <div class="wave-section">
+        <svg viewBox="0 0 1440 180" preserveAspectRatio="none" style="width:100%;height:100%;">
+            <path d="M0,90 Q180,20 360,90 T720,90 Q900,20 1080,90 T1440,90" fill="none" stroke="#000" stroke-width="2.5" opacity="0.15"/>
+            <path d="M0,90 Q180,40 360,90 T720,90 Q900,40 1080,90 T1440,90" fill="none" stroke="#000" stroke-width="2" opacity="0.25"/>
+            <path d="M0,90 Q180,60 360,90 T720,90 Q900,60 1080,90 T1440,90" fill="none" stroke="#000" stroke-width="1.5" opacity="0.4"/>
+        </svg>
+    </div>
+
+    <section class="gray-bg">
+        <p>Hearing loss affects millions worldwide and remains incurable. Unlike other vertebrates such as birds and fish, mammals cannot regenerate sensory hair cells in the inner ear once they are lost. Our long-term goal is to develop biological treatments to restore sound sensation in patients by unlocking the regenerative potential that exists in non-mammalian species.</p>
+        <p>We aim to discover—in detail—the molecular mechanisms and signaling pathways by which non-mammalian species naturally regenerate lost sensory hair cells in their inner ears. By understanding these fundamental biological processes, we can identify therapeutic targets and develop interventions that could restore this regenerative capacity in humans.</p>
+        <p>In parallel, we are developing a comprehensive platform in adult mice that allows us to systematically evaluate and screen for drugs, small molecules, and genetic manipulations that lead to proliferative hair cell regeneration in the deaf cochlea. This translational approach combines basic science discoveries with practical therapeutic development, bringing us closer to clinical applications that could transform the lives of millions affected by hearing loss.</p>
+    </section>
+
+    <section>
+        <div class="pi-section">
+            <div class="pi-name">Hubert Löwenheim, MD PhD</div>
+            <div class="pi-title">Principal Investigator</div>
+            <div class="divider"></div>
+            <p>Professor Löwenheim leads groundbreaking research in auditory neuroscience, focusing on the molecular mechanisms of hair cell regeneration and the development of novel therapeutic approaches for hearing restoration. His work bridges fundamental biological research with clinical applications, advancing our understanding of inner ear biology and developing innovative treatments for hearing disorders.</p>
+            <p style="margin-top: 24px;">His research encompasses multiple cutting-edge areas including gene therapy for inherited deafness, advanced imaging techniques for cochlear implant planning, digital therapeutic interventions for vestibular disorders, and the investigation of regenerative pathways that could restore hearing in mammals. Through systematic drug screening platforms and translational research, his laboratory is pioneering new approaches to overcome one of medicine's most challenging problems: the irreversible loss of sensory hair cells in the inner ear.</p>
+        </div>
+    </section>
+
+    <section id="research" class="gray-bg">
+        <h2>Research Focus</h2>
+        <div class="research-grid">
+            <div class="research-item">
+                <h3>Hair Cell Regeneration</h3>
+                <p>Investigating the molecular mechanisms and signaling pathways that enable non-mammalian species to naturally regenerate sensory hair cells. Our research identifies key transcription factors, growth factors, and cellular processes that could be therapeutically targeted to restore regenerative capacity in mammalian inner ears.</p>
+            </div>
+            <div class="research-item">
+                <h3>Gene Therapy Development</h3>
+                <p>Developing advanced gene therapy approaches including DB-OTO dual adeno-associated virus therapy for inherited deafness caused by otoferlin deficiency. This work explores novel delivery methods and genetic constructs to restore protein function in cochlear hair cells and synaptic transmission.</p>
+            </div>
+            <div class="research-item">
+                <h3>Drug Screening Platforms</h3>
+                <p>Building comprehensive platforms for systematic evaluation and high-throughput screening of pharmaceutical compounds, small molecules, and biological agents that promote proliferative hair cell regeneration in adult mammalian cochleae, bridging discovery research with therapeutic development.</p>
+            </div>
+            <div class="research-item">
+                <h3>Clinical Translation</h3>
+                <p>Advancing cochlear implant technology through innovative preoperative diagnostic techniques, including photon-counting detector CT with deep learning-supported denoising for dose reduction, enabling more precise surgical planning and improved patient outcomes while minimizing radiation exposure.</p>
+            </div>
+            <div class="research-item">
+                <h3>Vestibular & Phonation Research</h3>
+                <p>Developing digital therapeutic interventions for vestibular vertigo through evidence-based protocols and investigating novel non-contact laryngeal magnetomyography techniques for phonation differentiation, expanding our understanding of auditory-vestibular system function and disorders.</p>
+            </div>
+            <div class="research-item">
+                <h3>Translational Therapeutic Development</h3>
+                <p>Creating biological interventions and regenerative medicine strategies to restore auditory function in patients with sensorineural hearing loss. Our translational research pipeline moves discoveries from bench to bedside, addressing the clinical needs of millions affected by hearing disorders worldwide.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="publications">
+        <h2>Recent Publications</h2>
+        <div class="pub-item">
+            <div class="pub-meta">2025 • Research Article</div>
+            <h3>Feasibility of Dose Reduction in the Context of Preoperative Diagnostics in Cochlear Implant Surgery With a Photon-Counting Detector CT and Deep Learning-Supported Denoising</h3>
+            <p class="pub-authors">Schade-Mann T, Brendlin A, Afat S, et al., Albrecht T</p>
+            <p class="pub-authors" style="margin-top: 8px; font-size: 14px;">Demonstrates that PCD-CT with deep learning denoising can significantly reduce radiation dose for cochlear implant planning without compromising cochlear duct length measurement accuracy, representing a major advancement in patient safety.</p>
+        </div>
+        <div class="pub-item">
+            <div class="pub-meta">2025 • Clinical Trial</div>
+            <h3>DB-OTO Gene Therapy for Inherited Deafness</h3>
+            <p class="pub-authors">Valayannopoulos V, Bance M, Carvalho DS, et al., Whitton JP</p>
+            <p class="pub-authors" style="margin-top: 8px; font-size: 14px;">Groundbreaking dual adeno-associated virus 1 gene therapy delivering human OTOF complementary DNA for treatment of congenital deafness caused by otoferlin deficiency, offering hope for genetic restoration of hearing function.</p>
+        </div>
+        <div class="pub-item">
+            <div class="pub-meta">2025 • Survey Study</div>
+            <h3>Prä- und postoperative Standards in der Ohrchirurgie – interne Umfrage der ADANO Otologie-Fachgruppe</h3>
+            <p class="pub-authors">Esser-van de Loo J, Zahnert T, Rak K, et al., Luers JC</p>
+            <p class="pub-authors" style="margin-top: 8px; font-size: 14px;">Comprehensive ADANO Otology survey examining perioperative care standards in ear surgery, identifying variations in clinical practice and establishing evidence-based protocols to improve treatment outcomes.</p>
+        </div>
+        <div class="pub-item">
+            <div class="pub-meta">2025 • Study Protocol</div>
+            <h3>Digital Vertigo Therapy: Study Protocol for a Confirmatory Randomized Controlled Trial in Patients With Vestibular Vertigo</h3>
+            <p class="pub-authors">Wirth M, Pieper J, Heller U, et al., Wolpert S</p>
+            <p class="pub-authors" style="margin-top: 8px; font-size: 14px;">Protocol for confirmatory RCT evaluating digital therapy solutions for vestibular vertigo through central vestibular compensation, establishing standardized approaches for home-based vestibular rehabilitation.</p>
+        </div>
+        <div class="pub-item">
+            <div class="pub-meta">2025 • Research Article</div>
+            <h3>Phonation Differentiation by Non-Contact Laryngeal Magnetomyography</h3>
+            <p class="pub-authors">Marquetand J, Noury N, Lu H, et al., Wolpert S</p>
+            <p class="pub-authors" style="margin-top: 8px; font-size: 14px;">Proof-of-concept for non-contact laryngeal magnetomyography as a novel method for differentiating phonation patterns, offering a non-invasive alternative to traditional electromyography for studying laryngeal muscle function.</p>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact</h2>
+        <p><a href="/cdn-cgi/l/email-protection#4e263b2c2b3c3a6022212b392b20262b27230e232b2a603b2027633a3b2b2c2720292b20602a2b" style="text-decoration:underline;color:#000;"><span class="__cf_email__" data-cfemail="ef879a8d8a9d9bc183808a988a81878a8682af828a8bc19a8186c29b9a8a8d8681888a81c18b8a">[email&#160;protected]</span></a></p>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div><h4>Löwenheim Laboratory</h4></div>
+            <div><ul><li><a href="#research">Research</a></li><li>
